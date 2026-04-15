@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escape Room India: Il Cammino della Non-Violenza</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        :root {
+            --gandhi-khadi: #fdf6e3;
+            --india-orange: #FF9933;
+            --india-green: #138808;
+            --india-blue: #000080;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #eee7d7;
+            color: #2d3748;
+        }
+
+        .explanation-box {
+            border-left: 6px solid var(--india-blue);
+            background: #f8fafc;
+        }
+
+        .drop-zone {
+            min-height: 65px;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            background: #ffffff;
+        }
+
+        .draggable {
+            cursor: grab;
+            user-select: none;
+            touch-action: manipulation;
+            transition: transform 0.2s;
+        }
+
+        .draggable:hover { transform: translateY(-2px); }
+
+        .progress-bar {
+            height: 12px;
+            background: #d1d5db;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--india-orange), #fbbf24, var(--india-green));
+            transition: width 0.6s ease;
+        }
+
+        .card-gandhi {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border-bottom: 8px solid var(--india-green);
+        }
+
+        .btn-primary {
+            background-color: var(--india-blue);
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        .hidden { display: none; }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide { animation: slideIn 0.4s ease-out; }
+
+        .historical-intro {
+            background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+        }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+
+    <div id="game-container" class="max-w-4xl mx-auto">
+        
+        <!-- Intro Screen -->
+        <div id="intro-screen" class="card-gandhi p-10 text-center">
+            <div class="mb-6 flex justify-center">
+                <span class="text-7xl">🕉️</span>
+            </div>
+            <h1 class="text-4xl font-black text-gray-800 mb-6 uppercase tracking-tight">Satyagraha: Il Cammino di Gandhi</h1>
+            <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                Benvenuto in questo percorso didattico interattivo. Prima di iniziare il quiz, scopriamo insieme chi era l'uomo che ha cambiato il corso della storia con la sola forza della verità.
+            </p>
+            <button onclick="showGlobalContext()" class="btn-primary px-12 py-4 rounded-full font-black text-xl hover:scale-105 uppercase tracking-widest">Scopri il Personaggio</button>
+        </div>
+
+        <!-- Global Context Screen (NEW) -->
+        <div id="global-context-screen" class="hidden card-gandhi p-8 md:p-12 animate-slide historical-intro">
+            <h2 class="text-3xl font-black text-india-blue mb-6 uppercase border-b-4 border-india-orange inline-block">Perché Gandhi è un'icona mondiale?</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="space-y-4">
+                    <h3 class="font-bold text-xl text-india-green flex items-center">
+                        <span class="mr-2">🇮🇳</span> Il Legame con l'India
+                    </h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        Mohandas Gandhi è considerato il <b>"Padre della Nazione"</b> indiana. In un'epoca in cui l'India era una colonia britannica sfruttata e divisa, Gandhi riuscì a unificare milioni di persone di diverse religioni e caste sotto un unico obiettivo: l'indipendenza (Swaraj). Non fu solo un leader politico, ma una guida spirituale che restituì agli indiani la dignità e l'autosufficienza.
+                    </p>
+                </div>
+                <div class="space-y-4">
+                    <h3 class="font-bold text-xl text-india-blue flex items-center">
+                        <span class="mr-2">🌍</span> Importanza Internazionale
+                    </h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        A livello mondiale, Gandhi ha rivoluzionato il concetto di lotta. Prima di lui, si pensava che per abbattere un impero servissero le armi. Gandhi dimostrò che la <b>"Resistenza Passiva"</b> e la <b>"Disobbedienza Civile"</b> erano armi molto più potenti. Il suo esempio ha ispirato i movimenti per i diritti civili in tutto il mondo, da Martin Luther King negli USA a Nelson Mandela in Sudafrica.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-orange-50 p-6 rounded-xl border-l-4 border-india-orange mb-8 italic">
+                "La mia vita è il mio messaggio." - Questa frase riassume l'eredità di Gandhi: la coerenza assoluta tra i propri ideali e le proprie azioni.
+            </div>
+
+            <div class="flex justify-center">
+                <button onclick="startGame()" class="bg-india-green text-white px-12 py-4 rounded-full font-black text-xl hover:scale-105 shadow-xl uppercase tracking-tighter">Inizia il Quiz sulle Tappe della sua Vita</button>
+            </div>
+        </div>
+
+        <!-- Main Content Screen (Quiz/Explanations) -->
+        <div id="main-screen" class="hidden">
+            <div class="mb-6">
+                <div class="flex justify-between items-end mb-3">
+                    <div>
+                        <p id="era-tag" class="text-orange-600 font-black text-xs tracking-widest uppercase mb-1"></p>
+                        <h2 id="step-title" class="text-3xl font-black text-slate-800 italic"></h2>
+                    </div>
+                    <div class="text-right">
+                        <span id="solved-counter" class="text-sm font-bold text-slate-400 uppercase">Tappe: 0/10</span>
+                    </div>
+                </div>
+                <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+            </div>
+
+            <!-- Explanation View -->
+            <div id="explanation-view" class="card-gandhi p-8 min-h-[450px] animate-slide">
+                <div class="explanation-box p-6 mb-8 rounded-r-xl">
+                    <h3 class="text-india-blue font-black uppercase tracking-tighter mb-4">Contesto Storico della Tappa</h3>
+                    <div id="explanation-text" class="text-gray-700 leading-relaxed space-y-4"></div>
+                </div>
+                <div class="flex justify-center">
+                    <button onclick="switchToQuiz()" class="bg-orange-500 text-white px-10 py-4 rounded-full font-black uppercase tracking-widest hover:bg-orange-600 transition shadow-lg">Vai al Quiz →</button>
+                </div>
+            </div>
+
+            <!-- Quiz View -->
+            <div id="quiz-view" class="hidden card-gandhi p-8 min-h-[450px] animate-slide">
+                <div id="quiz-header" class="mb-6">
+                    <p class="text-xs font-black text-slate-400 uppercase mb-2">Domanda di verifica</p>
+                    <h3 id="quiz-question" class="text-xl font-bold text-slate-800"></h3>
+                </div>
+                <div id="quiz-body"></div>
+                <div id="feedback" class="mt-6 p-4 rounded-xl hidden text-center font-black uppercase tracking-wider"></div>
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <button id="prev-btn" onclick="prevStep()" class="w-full md:w-auto bg-slate-200 text-slate-700 px-6 py-3 rounded-xl font-bold hover:bg-slate-300 transition">← Tappa Precedente</button>
+                <div class="flex gap-3 w-full md:w-auto">
+                    <button id="check-btn" onclick="checkAnswer()" class="hidden flex-1 md:flex-none btn-primary px-10 py-3 rounded-xl font-black uppercase tracking-widest">Verifica</button>
+                    <button id="next-btn" onclick="nextStep()" class="hidden flex-1 md:flex-none bg-slate-700 text-white px-10 py-3 rounded-xl font-black uppercase tracking-widest">Prossima Tappa →</button>
+                    <button id="finish-btn" onclick="tryFinish()" class="hidden flex-1 md:flex-none bg-emerald-600 text-white px-10 py-3 rounded-xl font-black uppercase tracking-widest">Vittoria Finale 🇮🇳</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- End Screen -->
+        <div id="end-screen" class="hidden card-gandhi p-12 text-center">
+            <div class="text-8xl mb-6">🕊️</div>
+            <h2 class="text-5xl font-black text-slate-800 mb-4 italic uppercase">INDIPENDENZA!</h2>
+            <p class="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+                "In modo mite, puoi scuotere il mondo." <br>
+                Hai completato il cammino. Ora sai perché Gandhi è un pilastro della storia moderna.
+            </p>
+            <button onclick="location.reload()" class="btn-primary px-12 py-4 rounded-full font-black text-xl">RIPARTI DALL'INIZIO</button>
+        </div>
+
+    </div>
+
+    <script>
+        // Tutti i passi definiti in precedenza (mantenuti tali e quali)
+        const storySteps = [
+            {
+                id: 1,
+                era: "1893-1914: Il Risveglio",
+                title: "L'episodio del Treno",
+                explanation: "Mohandas Gandhi era un giovane avvocato indiano che lavorava in Sudafrica. In quel periodo, il Sudafrica applicava leggi razziali severissime. Gandhi, nonostante avesse un regolare biglietto di prima classe, venne espulso con la forza da un treno a Pietermaritzburg perché un passeggero bianco si era rifiutato di condividere lo scompartimento con lui. Questo episodio umiliante non lo portò alla vendetta, ma alla decisione di combattere le ingiustizie tramite la resistenza non-violenta.",
+                question: "In quale nazione Gandhi subì le discriminazioni che lo spinsero a iniziare la sua lotta politica?",
+                type: "drag",
+                options: ["Sudafrica", "Inghilterra", "Australia", "Canada"],
+                answer: "Sudafrica"
+            },
+            {
+                id: 2,
+                era: "1915: Il Ritorno",
+                title: "La Perla dell'Impero",
+                explanation: "Al suo ritorno in India, Gandhi trova un continente sottomesso al dominio dell'Impero Britannico. Gli inglesi controllavano tutto: l'economia, la giustizia e la terra. Gandhi iniziò a viaggiare per il paese in terza classe per conoscere la vera India, quella dei contadini poveri che venivano sfruttati per produrre materie prime destinate alle fabbriche di Londra. Capì che il nemico non era l'inglese come persona, ma il sistema coloniale.",
+                question: "L'Impero Britannico dominava l'India trasformandola in una colonia per lo sfruttamento delle risorse.",
+                type: "tf",
+                answer: true
+            },
+            {
+                id: 3,
+                era: "Economia e Simboli",
+                title: "La Rivoluzione dell'Arcolaio",
+                explanation: "L'industria tessile britannica aveva distrutto l'economia locale indiana, obbligando gli indiani a comprare vestiti fatti in Inghilterra. Gandhi lanciò il boicottaggio delle merci straniere e chiese agli indiani di produrre da soli i propri abiti usando il 'Charkha' (l'arcolaio manuale). Egli stesso iniziò a filare ogni giorno, trasformando l'arcolaio nel simbolo dell'indipendenza economica e della dignità del lavoro manuale.",
+                question: "Qual era l'obiettivo principale dell'uso dell'arcolaio proposto da Gandhi?",
+                type: "drag",
+                options: ["Autosufficienza economica", "Fare moda di lusso", "Velocizzare la produzione industriale", "Vendere tessuti agli inglesi"],
+                answer: "Autosufficienza economica"
+            },
+            {
+                id: 4,
+                era: "Filosofia",
+                title: "Ahimsa: La Non-Violenza",
+                explanation: "La forza di Gandhi risiedeva nel principio dell'Ahimsa. Non si trattava di vigliaccheria o passività, ma di una 'resistenza attiva'. Gandhi sosteneva che rispondere alla violenza con la violenza avrebbe solo moltiplicato l'odio. La non-violenza doveva invece 'disarmare' moralmente l'avversario, mostrandogli l'ingiustizia delle sue azioni attraverso la sofferenza accettata con coraggio dai manifestanti.",
+                question: "Secondo Gandhi, l'Ahimsa era un modo per affrontare l'ingiustizia senza ricorrere alle armi o all'odio.",
+                type: "tf",
+                answer: true
+            },
+            {
+                id: 5,
+                era: "1930: La Sfida Sociale",
+                title: "La Marcia del Sale",
+                explanation: "Il governo britannico deteneva il monopolio del sale e imponeva una tassa pesante su di esso. Era un'ingiustizia che colpiva soprattutto i più poveri. Gandhi organizzò una marcia di 380 km verso il mare di Dandi. Una volta arrivato, raccolse un pugno di fango salato, violando simbolicamente la legge. Milioni di indiani seguirono il suo esempio, dimostrando che un popolo unito e non violento poteva rendere l'India ingovernabile per i colonizzatori.",
+                question: "Perché Gandhi scelse proprio il 'sale' per la sua protesta più famosa?",
+                type: "drag",
+                options: ["Bene essenziale per tutti", "Era un prodotto di lusso", "Serviva per scopi militari", "Era facile da nascondere"],
+                answer: "Bene essenziale per tutti"
+            },
+            {
+                id: 6,
+                era: "Religione e Unità",
+                title: "Fratellanza Indù-Musulmana",
+                explanation: "L'India è una terra di grande diversità religiosa. Gandhi sapeva che i britannici usavano la tattica del 'divide et impera' per mettere Indù e Musulmani l'uno contro l'altro. Egli passò gran parte della sua vita a promuovere l'unità, digiunando ogni volta che scoppiavano violenze tra le due comunità. Considerava l'unità religiosa la colonna portante di una futura India libera e democratica.",
+                question: "Ordina le priorità di Gandhi per l'unità nazionale:",
+                type: "sort",
+                options: ["Pace tra le religioni", "Collaborazione politica", "Indipendenza totale"],
+                answer: ["Pace tra le religioni", "Collaborazione politica", "Indipendenza totale"]
+            },
+            {
+                id: 7,
+                era: "Riforma Sociale",
+                title: "Gli Ultimi della Terra",
+                explanation: "Gandhi si oppose duramente al sistema delle caste, in particolare alla pratica dell'intoccabilità. Chiamò i membri delle caste più basse 'Harijan' (Figli di Dio). Egli voleva che l'India non fosse solo libera dagli inglesi, ma anche libera dalle sue stesse catene interne di pregiudizio e discriminazione sociale, sostenendo che un'India che opprimeva i propri figli non meritava la libertà.",
+                question: "Quale termine scelse Gandhi per restituire dignità alle persone emarginate dal sistema delle caste?",
+                type: "drag",
+                options: ["Harijan", "Dalit", "Bramini", "Kshatriya"],
+                answer: "Harijan"
+            },
+            {
+                id: 8,
+                era: "1942: L'Ultimo Appello",
+                title: "Quit India!",
+                explanation: "Nel mezzo della Seconda Guerra Mondiale, Gandhi lanciò il movimento 'Quit India' (Lasciate l'India). Fu il suo messaggio più forte e definitivo: chiese un'immediata indipendenza e ordinò ai suoi sostenitori di 'Agire o Morire' (Do or Die) nella loro resistenza non-violenta. Migliaia di leader, incluso Gandhi stesso, vennero arrestati, ma il movimento era ormai inarrestabile.",
+                question: "Il motto 'Quit India' chiedeva l'immediato ritiro dei britannici dal suolo indiano.",
+                type: "tf",
+                answer: true
+            },
+            {
+                id: 9,
+                era: "1947: La Divisione",
+                title: "Un Giorno di Dolore",
+                explanation: "Il 15 agosto 1947 l'India divenne indipendente, ma con una dolorosa scissione: nacque anche il Pakistan. Questa divisione portò a violenze terribili tra profughi. Mentre il paese festeggiava, Gandhi si trovava lontano dalle cerimonie, a Calcutta, pregando e digiunando per la pace. Vedeva la divisione del paese come il fallimento del suo sogno di fratellanza.",
+                question: "Quale nazione nacque dalla divisione dell'India nel 1947?",
+                type: "drag",
+                options: ["Pakistan", "Bangladesh", "Nepal", "Sri Lanka"],
+                answer: "Pakistan"
+            },
+            {
+                id: 10,
+                era: "Eredità",
+                title: "Il Martirio di un Santo",
+                explanation: "Gandhi morì per mano di un fanatico indù il 30 gennaio 1948. Le sue ceneri vennero disperse nei fiumi sacri dell'India, ma la sua filosofia influenzò leader mondiali come Martin Luther King e Nelson Mandela. Oggi Gandhi è celebrato come il 'Mahatma' (Grande Anima) e il 'Padre della Nazione', simbolo universale della forza morale che vince sulla forza bruta.",
+                question: "Ordina cronologicamente le fasi della vita di Gandhi:",
+                type: "sort",
+                options: ["Studi a Londra", "Lotta in Sudafrica", "Marcia del Sale", "Indipendenza India"],
+                answer: ["Studi a Londra", "Lotta in Sudafrica", "Marcia del Sale", "Indipendenza India"]
+            }
+        ];
+
+        let currentIdx = 0;
+        let isQuizMode = false;
+        let userAnswers = new Array(storySteps.length).fill(null);
+        let solvedSteps = new Set();
+
+        function showGlobalContext() {
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('global-context-screen').classList.remove('hidden');
+        }
+
+        function startGame() {
+            document.getElementById('global-context-screen').classList.add('hidden');
+            document.getElementById('main-screen').classList.remove('hidden');
+            renderStep();
+        }
+
+        function renderStep() {
+            const step = storySteps[currentIdx];
+            document.getElementById('era-tag').innerText = step.era;
+            document.getElementById('step-title').innerText = step.title;
+            document.getElementById('solved-counter').innerText = `Tappe: ${solvedSteps.size}/${storySteps.length}`;
+            document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / storySteps.length) * 100}%`;
+            document.getElementById('prev-btn').disabled = currentIdx === 0;
+
+            if (isQuizMode) showQuiz();
+            else showExplanation();
+        }
+
+        function showExplanation() {
+            isQuizMode = false;
+            document.getElementById('explanation-view').classList.remove('hidden');
+            document.getElementById('quiz-view').classList.add('hidden');
+            document.getElementById('explanation-text').innerHTML = storySteps[currentIdx].explanation;
+            document.getElementById('check-btn').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            document.getElementById('finish-btn').classList.add('hidden');
+        }
+
+        function switchToQuiz() {
+            isQuizMode = true;
+            renderStep();
+        }
+
+        function showQuiz() {
+            const step = storySteps[currentIdx];
+            document.getElementById('explanation-view').classList.add('hidden');
+            document.getElementById('quiz-view').classList.remove('hidden');
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('quiz-question').innerText = step.question;
+
+            if (solvedSteps.has(currentIdx)) {
+                document.getElementById('check-btn').classList.add('hidden');
+                if (currentIdx === storySteps.length - 1) document.getElementById('finish-btn').classList.remove('hidden');
+                else document.getElementById('next-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('check-btn').classList.remove('hidden');
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('finish-btn').classList.add('hidden');
+            }
+            renderQuizContent(step);
+        }
+
+        function renderQuizContent(step) {
+            const body = document.getElementById('quiz-body');
+            let html = "";
+            if (step.type === 'tf') {
+                const val = userAnswers[currentIdx];
+                html = `<div class="grid grid-cols-2 gap-4 mt-4">
+                    <button onclick="selectTF(true)" class="p-4 border-2 rounded-xl font-bold ${val === true ? 'border-india-blue bg-blue-50' : 'border-gray-100'}">VERO</button>
+                    <button onclick="selectTF(false)" class="p-4 border-2 rounded-xl font-bold ${val === false ? 'border-india-blue bg-blue-50' : 'border-gray-100'}">FALSO</button>
+                </div>`;
+            } else if (step.type === 'drag') {
+                const opts = [...step.options].sort(() => Math.random() - 0.5);
+                html = `<div class="flex flex-wrap gap-2 mb-6 mt-4">
+                    ${opts.map(o => `<div draggable="true" ondragstart="drag(event)" class="draggable bg-white px-4 py-2 border-2 border-gray-200 rounded-lg shadow-sm font-medium">${o}</div>`).join('')}
+                </div><div ondrop="drop(event)" ondragover="allowDrop(event)" class="drop-zone text-gray-400 font-bold uppercase text-sm">
+                    ${userAnswers[currentIdx] || 'Trascina qui'}
+                </div>`;
+            } else if (step.type === 'sort') {
+                const opts = [...step.options].sort(() => Math.random() - 0.5);
+                html = `<div class="bg-gray-50 p-3 rounded-lg mb-4 flex flex-wrap gap-2 mt-4">
+                    ${opts.map(o => `<div draggable="true" ondragstart="drag(event)" class="draggable bg-white p-2 border rounded shadow-sm text-sm">${o}</div>`).join('')}
+                </div><div id="sort-list" ondrop="dropSort(event)" ondragover="allowDrop(event)" class="drop-zone flex-col gap-2 min-h-[120px]">
+                    ${(userAnswers[currentIdx] || []).map(o => `<div class="w-full p-2 bg-white border-2 border-india-blue rounded-lg text-center font-bold">${o}</div>`).join('')}
+                </div>`;
+            }
+            body.innerHTML = html;
+        }
+
+        function selectTF(val) {
+            if (solvedSteps.has(currentIdx)) return;
+            userAnswers[currentIdx] = val;
+            renderQuizContent(storySteps[currentIdx]);
+        }
+        function drag(e) { e.dataTransfer.setData("text", e.target.innerText); }
+        function allowDrop(e) { e.preventDefault(); e.currentTarget.classList.add('bg-orange-50'); }
+        function drop(e) {
+            e.preventDefault();
+            userAnswers[currentIdx] = e.dataTransfer.getData("text");
+            renderQuizContent(storySteps[currentIdx]);
+        }
+        function dropSort(e) {
+            e.preventDefault();
+            const val = e.dataTransfer.getData("text");
+            if (!Array.isArray(userAnswers[currentIdx])) userAnswers[currentIdx] = [];
+            if (!userAnswers[currentIdx].includes(val)) {
+                userAnswers[currentIdx].push(val);
+                renderQuizContent(storySteps[currentIdx]);
+            }
+        }
+
+        function checkAnswer() {
+            const step = storySteps[currentIdx];
+            const ans = userAnswers[currentIdx];
+            let correct = step.type === 'sort' ? JSON.stringify(ans) === JSON.stringify(step.answer) : ans === step.answer;
+            const f = document.getElementById('feedback');
+            f.classList.remove('hidden');
+            if (correct) {
+                solvedSteps.add(currentIdx);
+                f.innerText = "Corretto!";
+                f.className = "mt-6 p-4 rounded-xl text-center font-black text-white bg-emerald-600 animate-slide";
+                setTimeout(showQuiz, 500);
+            } else {
+                f.innerText = "Riprova!";
+                f.className = "mt-6 p-4 rounded-xl text-center font-black text-white bg-rose-600 animate-slide";
+                if(step.type === 'sort') userAnswers[currentIdx] = [];
+            }
+        }
+
+        function nextStep() { if (currentIdx < storySteps.length - 1) { currentIdx++; isQuizMode = false; renderStep(); } }
+        function prevStep() { if (currentIdx > 0) { currentIdx--; isQuizMode = false; renderStep(); } }
+        function tryFinish() {
+            if (solvedSteps.size === storySteps.length) {
+                document.getElementById('main-screen').classList.add('hidden');
+                document.getElementById('end-screen').classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
